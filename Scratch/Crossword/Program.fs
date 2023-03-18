@@ -30,6 +30,19 @@ let MakeCrossword (boardDescription : string) =
 
     {RowCount = rowCount; ColumnCount = columnCount; Cells = cells}
 
+
+let CrosswordToString crossword =
+    let cellToChar = function
+        | Some c    -> c.Char
+        | None      -> '.'
+
+    let builder = (System.Text.StringBuilder(), crossword.Cells) ||> Array.fold (fun builder row ->
+        (builder, row) ||> Array.fold(fun builder c -> builder.Append(cellToChar c)) |> ignore
+        builder.AppendLine()
+    )
+
+    builder.ToString()
+
 let IsMatch (wordFromCrossword : string) (candidate : string) =
     let rec matchStrings (left : string) (right : string) (index : int) =
         if index = left.Length then 
@@ -49,7 +62,7 @@ let doWords () =
     let puzzle = "2001\n0..0\n1000\n0..0"
     let words = [|"casa"; "alan"; "ciao"; "anta"|]
     let crossword = MakeCrossword puzzle
-    printfn "foo"
+    crossword |> CrosswordToString |> printfn "%s"
 
 doWords ()
 
