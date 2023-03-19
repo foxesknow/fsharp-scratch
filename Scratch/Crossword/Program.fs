@@ -73,18 +73,13 @@ let CanGoRight row column crossword =
     if column + 1 = crossword.ColumnCount then
         false
     else
-        match crossword.Cells[row][column + 1] with
-        | ValueSome c -> c.Char = ' '
-        | crossword   -> false
+        (crossword.Cells[row][column + 1]).IsSome
 
 let CanGoDown row column crossword =
     if row + 1 = crossword.RowCount then
         false
     else
-        match crossword.Cells[row + 1][column] with
-        | ValueSome c -> c.Char = ' '
-        | crossword   -> false
-
+        (crossword.Cells[row + 1][column]).IsSome
 
 let GetWordRight row column crossword =
     let builder = StringBuilder()
@@ -237,8 +232,39 @@ let doHolidays () =
     SolveCrossword words crossword |> ignore
     crossword |> CrosswordToString |> printfn "%s"
 
-doHolidays ()
+let doFood () =
+    let puzzle =   "..1.1..1...\n\
+                    10000..1000\n\
+                    ..0.0..0...\n\
+                    ..1000000..\n\
+                    ..0.0..0...\n\
+                    1000..10000\n\
+                    ..0.1..0...\n\
+                    ....0..0...\n\
+                    ..100000...\n\
+                    ....0..0...\n\
+                    ....0......"
 
-printfn "%b" (IsMatch "Hello  " "Hello")
-printfn "%b" (IsMatch "HellO" "Hello")
+    let words = [|
+        "popcorn";
+        "fruit";
+        "flour";
+        "chicken";
+        "eggs";
+        "vegetables";
+        "pasta";
+        "pork";
+        "steak";
+        "cheese"|] |> Set.ofArray
+
+    let crossword = MakeCrossword puzzle
+    SolveCrossword words crossword |> ignore
+    crossword |> CrosswordToString |> printfn "%s"
+
+doWords ()
+printfn "-----------------"
+doHolidays ()
+printfn "-----------------"
+doFood ()
+
 printfn "Done"
